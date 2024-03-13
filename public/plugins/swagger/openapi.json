@@ -1,0 +1,284 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Swagger Weather Test",
+        "description": "Swagger Weather Test api documentation",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api"
+        }
+    ],
+    "tags": [
+        {
+            "name": "AUTH",
+            "description": "User register and login"
+        },
+        {
+            "name": "WEATHER",
+            "description": "Show weather info"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "AUTH"
+                ],
+                "summary": "Login by email and password",
+                "operationId": "userLogin",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiToken"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "AUTH"
+                ],
+                "summary": "Register new user",
+                "operationId": "userRegister",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiToken"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/register/{provider}": {
+            "post": {
+                "tags": [
+                    "AUTH"
+                ],
+                "summary": "Register or login user by social",
+                "operationId": "userSocialRegister",
+                "parameters": [
+                    {
+                        "name": "provider",
+                        "in": "path",
+                        "description": "Social provider",
+                        "required": true,
+                        "explode": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "available",
+                            "enum": [
+                                "google"
+                            ],
+                            "example": "google",
+                            "required": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Url"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/home": {
+            "get": {
+                "tags": [
+                    "WEATHER"
+                ],
+                "summary": "Show weather by user ip",
+                "operationId": "WeatherShow",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserShow"
+                                        },
+                                        "main": {
+                                            "$ref": "#/components/schemas/Weather"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ApiToken": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "example": "10|AzdpSNhgwfwnUt1n1C9UHhvD9G8kDj2EdmYZBIaz93ac962c"
+                    }
+                }
+            },
+            "Weather": {
+                "type": "object",
+                "properties": {
+                    "temp": {
+                        "type": "number",
+                        "example": 283.54
+                    },
+                    "pressure": {
+                        "type": "number",
+                        "example": 1020
+                    },
+                    "humidity": {
+                        "type": "integer",
+                        "example": 34
+                    },
+                    "temp_min": {
+                        "type": "number",
+                        "example": 279.66
+                    },
+                    "temp_max": {
+                        "type": "number",
+                        "example": 288.44
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "email@gmail.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "secretpassword"
+                    }
+                }
+            },
+            "UserCreate": {
+                "type": "object",
+                "properties": {
+                    "first_name": {
+                        "type": "string",
+                        "example": "First"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Last"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "email@email.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "secretpass"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "example": "secretpass"
+                    }
+                }
+            },
+            "UserShow": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "example": "Taras"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Ivanov"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "email@gmail.com"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "Active"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "2023-10-29 13:48:48"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "example": "2023-10-29 13:48:48"
+                    }
+                }
+            },
+            "Url": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "example": "https://accounts.google.com/o/oauth2/auth?client_id=849338390318-fsnf7e8q8p2npdieji489i7n27s2la57.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A2020%2Fapi%2Fregister%2Fcallback&scope=openid+profile+email&response_type=code"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "Authorization": {
+                "name": "Authorization",
+                "type": "apiKey",
+                "in": "header"
+            }
+        }
+    }
+}
